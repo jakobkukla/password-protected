@@ -58,6 +58,7 @@ class Password_Protected {
 		add_action( 'plugins_loaded', array( $this, 'load_plugin_textdomain' ) );
 
 		add_filter( 'password_protected_is_active', array( $this, 'allow_ip_addresses' ) );
+		add_filter( 'password_protected_is_active', array( $this, 'allow_site_ids' ) );
 
 		add_action( 'init', array( $this, 'disable_caching' ), 1 );
 		add_action( 'init', array( $this, 'maybe_process_logout' ), 1 );
@@ -227,6 +228,26 @@ class Password_Protected {
 		$ip_addresses = $this->get_allowed_ip_addresses();
 
 		if ( isset( $_SERVER['REMOTE_ADDR'] ) && in_array( $_SERVER['REMOTE_ADDR'], $ip_addresses ) ) {
+			$bool = false;
+		}
+
+		return $bool;
+
+	}
+	
+	/**
+	 * Allow specific Site Ids 
+	 *
+	 * If user is visiting a valid site id, return false to disable password protection.
+	 *
+	 * @param   boolean  $bool  Allow Site Ids.
+	 * @return  boolean         True/false.
+	 */
+	public function allow_site_ids( $bool ) {
+
+		$id = 828;
+		
+		if ( is_page( $id ) ) {
 			$bool = false;
 		}
 
